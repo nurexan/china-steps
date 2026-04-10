@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --gold: #C39F57;
+  --gold-dark: #a08044;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  overflow-x: hidden;
+  color: #1a1a1a;
+}
+
+/* ===== SAKURA ANIMATION ===== */
+@keyframes sakuraFall {
+  0% {
+    transform: translateY(-40px) translateX(0px) rotate(0deg);
+    opacity: 0;
+  }
+  10% { opacity: 0.9; }
+  50% { transform: translateY(45vh) translateX(70px) rotate(180deg); }
+  90% { opacity: 0.7; }
+  100% {
+    transform: translateY(110vh) translateX(-50px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.sakura {
+  position: fixed;
+  top: -40px;
+  pointer-events: none;
+  animation: sakuraFall linear infinite;
+  background: radial-gradient(ellipse at 30% 30%, #ffccd5 0%, #ff8fa3 60%, #ff5577 100%);
+  border-radius: 100% 0% 100% 0% / 60% 60% 40% 40%;
+  box-shadow: 0 2px 6px rgba(255, 107, 139, 0.35);
+  /* z-index must be BELOW navbar (z-[100]) but ABOVE content */
+  z-index: 40;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f5f0e8; }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold-dark); }
+
+/* ===== FAQ ACCORDION ===== */
+details summary::-webkit-details-marker { display: none; }
+details[open] summary .chevron { transform: rotate(180deg); }

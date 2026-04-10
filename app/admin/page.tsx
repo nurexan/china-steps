@@ -83,7 +83,42 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default function AdminDashboard() {
+  const [isAuth, setIsAuth] = useState(false);
+  const [pwd, setPwd] = useState("");
   const [activeTab, setActiveTab] = useState("submissions");
+
+  if (!isAuth) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] flex flex-col items-center justify-center p-4 relative overflow-hidden">
+        {/* Decorative blur elements for premium look */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#C39F57]/10 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
+        
+        <div className="bg-white/5 backdrop-blur-2xl border border-white/10 p-10 md:p-12 rounded-[2rem] shadow-2xl max-w-md w-full text-center relative z-10 transition-all">
+          <div className="w-20 h-20 bg-gradient-to-br from-[#C39F57] to-[#8a6b32] rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-xl shadow-[#C39F57]/20 border border-white/20">
+            <span className="text-white font-serif text-4xl font-black">C</span>
+          </div>
+          <h1 className="text-3xl font-serif font-bold text-white mb-2">Sayt Boshqaruvi</h1>
+          <p className="text-sm text-gray-400 mb-10">Tizimga kirish uchun maxfiy parolni kiritish talab etiladi.</p>
+          
+          <input 
+            type="password" 
+            value={pwd} 
+            onChange={e => setPwd(e.target.value)}
+            onKeyDown={e => { if(e.key === 'Enter') { if(pwd === "Asdffdsa_0") setIsAuth(true); else alert("Noto'g'ri parol!"); } }}
+            className="w-full bg-black/50 border border-white/10 text-white rounded-2xl px-5 py-4 mb-6 text-center tracking-widest focus:outline-none focus:border-[#C39F57] focus:ring-2 focus:ring-[#C39F57]/20 font-mono text-lg transition-all"
+            placeholder="••••••••••"
+          />
+          <button 
+            onClick={() => { if(pwd === "Asdffdsa_0") setIsAuth(true); else alert("Huxlat!"); }}
+            className="w-full bg-gradient-to-r from-[#C39F57] to-[#a08044] text-white font-bold py-4 rounded-xl transition-all shadow-xl shadow-[#C39F57]/20 hover:scale-[1.02] active:scale-[0.98] outline-none text-lg"
+          >
+            Tizimga Kirish
+          </button>
+        </div>
+      </div>
+    );
+  }
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
 

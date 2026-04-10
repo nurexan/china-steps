@@ -1,9 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Build jarayonida crash bo'lmasligi uchun tekshiruv
+export const supabase = (supabaseUrl && supabaseAnonKey) 
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null as any;
 
 // Types
 export interface University {
@@ -36,6 +39,11 @@ export interface Submission {
 
 // ===== IMAGE UPLOAD to Supabase Storage =====
 export async function uploadImage(file: File, folder: string = 'uploads'): Promise<string | null> {
+  if (!supabase) {
+    console.error('Supabase client is not initialized. Check your environment variables.');
+    return null;
+  }
+
   const ext = file.name.split('.').pop();
   const fileName = `${folder}/${Date.now()}.${ext}`;
 

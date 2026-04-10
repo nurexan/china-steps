@@ -1,20 +1,19 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { supabase } from '../../../lib/supabase';
 
 const botToken = "8095290773:AAFUsigsOut1p4wYzW1VMBNE3j5bW3fMUBY";
 const chatId = "7832781255";
 
 async function sendTelegram(text: string) {
-  await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML" }),
-  });
+  try {
+    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML" }),
+    });
+  } catch (err) {
+    console.error("Telegram error:", err);
+  }
 }
 
 export async function POST(req: Request) {
@@ -23,14 +22,16 @@ export async function POST(req: Request) {
     const { type, name, phone, courseCode, text } = body;
 
     if (type === "contact") {
-      // 1. Supabase ga saqlash
-      await supabase.from('submissions').insert([{
-        name,
-        phone,
-        source: 'Veb-sayt',
-        status: 'KUTILMOQDA',
-        message: text || '',
-      }]);
+      // 1. Supabase ga saqlash (supabase client mavjudligini tekshirish)
+      if (supabase) {
+        await supabase.from('submissions').insert([{
+          name,
+          phone,
+          source: 'Veb-sayt',
+          status: 'KUTILMOQDA',
+          message: text || '',
+        }]);
+      }
 
       // 2. Telegram xabar
       await sendTelegram(
